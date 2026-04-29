@@ -16,6 +16,7 @@ class Settings(BaseSettings):
             f"postgresql://{self.db_user}:{self.db_password}"
             f"@{self.db_host}:{self.db_port}/{self.db_name}"
         )
+    
 
 
 settings = Settings() # type: ignore
