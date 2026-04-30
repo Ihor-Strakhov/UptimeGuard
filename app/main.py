@@ -7,11 +7,8 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
-from app.database import SessionLocal, engine, Base
+from app.database import SessionLocal
 from app import models
-
-
-Base.metadata.create_all(bind=engine)
 
 class Site(BaseModel):
     url: str
