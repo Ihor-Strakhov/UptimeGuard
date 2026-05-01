@@ -1,29 +1,51 @@
+# name: CI for project
+
+# on:
+#   push:
+#     branches: [main]
+#   pull_request:
+#     branches: [main]
+  
+# jobs:
+#   build:
+#     runs-on: ubuntu:24.04
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v2
+
+#       - name: Build and push Docker images
+#         uses: docker/build-push-action@v3
+#         with:
+#           context: .
+#           push: false
+#           tags: uptimeguard-app:latest, uptimeguard-worker:latest
+
+#       - name: Run tests
+#         run: |
+#           docker-compose -f docker-compose.yml up --abort-on-container-exit --exit-code-from app
+
 name: CI for project
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    branches: [main]
-  
+    branches: [ main ]
+
 jobs:
-  build:
-    runs-on: ubuntu:24.04
-
+  hello-world:
+    runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Build and push Docker images
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          push: false
-          tags: uptimeguard-app:latest, uptimeguard-worker:latest
-
-      - name: Run tests
-        run: |
-          docker-compose -f docker-compose.yml up --abort-on-container-exit --exit-code-from app
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Say Hello
+      run: echo "Hello, GitHub Actions! This is my first workflow!"
+      
+    - name: Show date
+      run: date
