@@ -3,7 +3,9 @@ import requests
 from datetime import datetime, timedelta
 from app.database import SessionLocal
 from app.models import Site, CheckResult
+from app.logging_config import get_logger
 
+logger = get_logger(__name__)
 
 def wait_for_db_ready():
 
@@ -12,10 +14,10 @@ def wait_for_db_ready():
     while True:
         try:
             db = SessionLocal()
-            print("DB + tables are ready")
+            logger.info("DB + tables are ready")
             break
         except Exception as e:
-            print("Waiting for DB schema...")
+            logger.info("Waiting for DB schema...")
             time.sleep(2)
         finally:
             if db:
@@ -39,7 +41,7 @@ def check_site(url):
         return "DOWN", response.status_code
 
     except requests.RequestException as exc:
-        print(f"[CHECKER] request error for {normalized_url}: {exc}")
+        logger.exception(f"[CHECKER] request error for {normalized_url}: {exc}")
         return "DOWN", None
 
 
@@ -65,11 +67,11 @@ def run_checker():
         db = SessionLocal()
         try:
             sites = db.query(Site).all()
-            print(f"[CHECKER] sites: {len(sites)}")
+            logger.info(f"[CHECKER] sites: {len(sites)}")
 
             for site in sites:
                 if not site_is_due_for_check(site, db):
-                    print(f"[CHECKER] skip {site.url}, interval not passed")
+                    logger.info(f"[CHECKER] skip {site.url}, interval not passed")
                     continue
 
                 status, status_code = check_site(site.url)
@@ -81,13 +83,13 @@ def run_checker():
                 db.add(result)
                 db.commit()
                 db.refresh(result)
-                print(
+                logger.info(
                     f"[CHECKER] {site.url} -> {status} "
                     f"({status_code if status_code is not None else 'no code'})"
                 )
 
         except Exception as e:
-            print(f"[CHECKER ERROR] {e}")
+            logger.exception(f"[CHECKER ERROR] {e}")
             db.rollback()
 
         finally:

@@ -9,6 +9,9 @@ from pydantic import BaseModel
 
 from app.database import SessionLocal
 from app import models
+from app.logging_config import get_logger
+
+logger = get_logger(__name__)
 
 class Site(BaseModel):
     url: str
@@ -42,6 +45,8 @@ async def add_site_to_db(site: Site, db: Session = Depends(get_db)):
     db.add(db_site)
     db.commit()
     db.refresh(db_site)
+
+    logger.info(f"Site '{site.url}' created successfully!")
 
     return {"message": f"Site '{site.url}' created successfully!"}
 
