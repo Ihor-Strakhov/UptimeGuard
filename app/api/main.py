@@ -37,7 +37,7 @@ def get_db():
 
 @app.get("/")
 async def root():
-    return FileResponse("app/static/index.html")
+    return FileResponse(os.path.join(STATIC_DIR, "index.html"))
 
 @app.post("/site")
 async def add_site_to_db(site: Site, db: Session = Depends(get_db)):
@@ -58,7 +58,8 @@ async def get_sites(db: Session = Depends(get_db)):
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_DIR = os.path.normpath(os.path.join(BASE_DIR, "..", "static"))
 app.mount(
     "/",
-    StaticFiles(directory=os.path.join(BASE_DIR, "static"), html=True),
+    StaticFiles(directory=STATIC_DIR, html=True),
     name="static")

@@ -47,19 +47,33 @@ services:
       init:
         condition: service_completed_successfully
 
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -o /dev/null -w '%{http_code}' http://localhost:8000/ | grep -q '200' || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
   worker:
     build: .
 
     container_name: uptimeguard-worker
 
     command: python -m app.worker.checker
-
+    
     env_file:
       - .env
 
     depends_on:
       init:
         condition: service_completed_successfully
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h $$DB_HOST -p 5432 -U $$DB_USER"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    
 
 volumes:
   pgdata:
