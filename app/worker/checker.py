@@ -1,11 +1,12 @@
 import time
 import requests
 from datetime import datetime, timedelta
-from app.database import SessionLocal
-from app.models import Site, CheckResult
-from app.logging_config import get_logger
+from app.db.database import SessionLocal
+from app.db.models import Site, CheckResult
+from pathlib import Path
+from app.cfg.logging_config import get_logger
 
-logger = get_logger(__name__)
+logger = get_logger(Path(__file__).stem)
 
 def wait_for_db_ready():
 

@@ -7,11 +7,12 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
-from app.database import SessionLocal
-from app import models
-from app.logging_config import get_logger
+from app.db.database import SessionLocal
+from app.db import models
+from pathlib import Path
+from app.cfg.logging_config import get_logger
 
-logger = get_logger(__name__)
+logger = get_logger(Path(__file__).stem)
 
 class Site(BaseModel):
     url: str

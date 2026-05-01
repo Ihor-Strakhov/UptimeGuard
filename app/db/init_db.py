@@ -1,11 +1,12 @@
 from sqlalchemy import create_engine, text
 # from sqlalchemy.exc import ProgrammingError
-from app.database import Base, engine
-from app import models
-from app.config import settings
-from app.logging_config import get_logger
+from app.db.database import Base, engine
+from app.db import models
+from app.cfg.config import settings
+from pathlib import Path
+from app.cfg.logging_config import get_logger
 
-logger = get_logger(__name__)
+logger = get_logger(Path(__file__).stem)
 
 # Create database if it doesn't exist
 base_engine = create_engine(settings.database_url_base, isolation_level="AUTOCOMMIT")

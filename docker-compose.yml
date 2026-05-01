@@ -23,7 +23,7 @@ services:
   init:
     build: .
 
-    command: python -m app.init_db
+    command: python -m app.db.init_db
 
     env_file:
       - .env
@@ -52,7 +52,7 @@ services:
 
     container_name: uptimeguard-worker
 
-    command: python -m app.checker
+    command: python -m app.worker.checker
 
     env_file:
       - .env
