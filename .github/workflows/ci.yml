@@ -23,4 +23,15 @@ jobs:
         run: ruff check . --output-format=github
 
       - name : Run Ruff Formatter
-        run: ruff format . 
+        run: ruff format --check .
+
+  Docker:
+    runs-on: ubuntu-latest
+    needs: Ruff
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t uptimeguard:latest .
+
