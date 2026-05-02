@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, text
+
 # from sqlalchemy.exc import ProgrammingError
 from app.db.database import Base, engine
-from app.db import models
 from app.cfg.config import settings
 from pathlib import Path
 from app.cfg.logging_config import get_logger

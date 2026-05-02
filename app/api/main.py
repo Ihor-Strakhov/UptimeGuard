@@ -14,6 +14,7 @@ from app.cfg.logging_config import get_logger
 
 logger = get_logger(Path(__file__).stem)
 
+
 class Site(BaseModel):
     url: str
     interval_minutes: int
@@ -28,6 +29,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 def get_db():
     db = SessionLocal()
     try:
@@ -35,9 +37,11 @@ def get_db():
     finally:
         db.close()
 
+
 @app.get("/")
 async def root():
     return FileResponse(os.path.join(STATIC_DIR, "index.html"))
+
 
 @app.post("/site")
 async def add_site_to_db(site: Site, db: Session = Depends(get_db)):
@@ -51,6 +55,7 @@ async def add_site_to_db(site: Site, db: Session = Depends(get_db)):
 
     return {"message": f"Site '{site.url}' created successfully!"}
 
+
 @app.get("/sites")
 async def get_sites(db: Session = Depends(get_db)):
     sites = db.query(models.Site).all()
@@ -59,7 +64,4 @@ async def get_sites(db: Session = Depends(get_db)):
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.normpath(os.path.join(BASE_DIR, "..", "static"))
-app.mount(
-    "/",
-    StaticFiles(directory=STATIC_DIR, html=True),
-    name="static")
+app.mount("/", StaticFiles(directory=STATIC_DIR, html=True), name="static")

@@ -1,6 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.db.database import Base
 
@@ -12,6 +11,7 @@ class Site(Base):
     url = Column(String, unique=True, index=True)
     interval_minutes = Column(Integer)
     created_at = Column(DateTime, default=datetime.utcnow)
+
 
 class CheckResult(Base):
     __tablename__ = "check_results"

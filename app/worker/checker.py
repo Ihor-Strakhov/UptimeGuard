@@ -8,6 +8,7 @@ from app.cfg.logging_config import get_logger
 
 logger = get_logger(Path(__file__).stem)
 
+
 def wait_for_db_ready():
 
     db = None
@@ -17,12 +18,13 @@ def wait_for_db_ready():
             db = SessionLocal()
             logger.info("DB + tables are ready")
             break
-        except Exception as e:
+        except Exception:
             logger.info("Waiting for DB schema...")
             time.sleep(2)
         finally:
             if db:
                 db.close()
+
 
 def normalize_url(url: str) -> str:
     if not url.startswith("http://") and not url.startswith("https://"):
@@ -34,7 +36,9 @@ def check_site(url):
     normalized_url = normalize_url(url)
     try:
         headers = {"User-Agent": "UptimeGuard/1.0"}
-        response = requests.get(normalized_url, timeout=5, allow_redirects=True, headers=headers)
+        response = requests.get(
+            normalized_url, timeout=5, allow_redirects=True, headers=headers
+        )
 
         if response.status_code < 500:
             return "UP", response.status_code
