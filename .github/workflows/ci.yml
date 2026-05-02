@@ -6,7 +6,7 @@ on:
   
 jobs:
   Ruff:
-    runs-on: ubuntu:latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -20,7 +20,7 @@ jobs:
         run: pip install ruff
 
       - name: Run Ruff Linter
-        run: ruff check /app --output-format=github
+        run: ruff check . --output-format=github
 
       - name : Run Ruff Formatter
-        run: ruff format /app 
+        run: ruff format . 
