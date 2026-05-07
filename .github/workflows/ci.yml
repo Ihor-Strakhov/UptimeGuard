@@ -87,7 +87,7 @@ jobs:
 
           set -e
 
-          cd /home/xrems/uptimeguard
+          cd /home/xrems/UptimeGuard
 
           echo "IMAGE=europe-central2-docker.pkg.dev/uptimeguard-495411/uptime-guard-repo/uptimeimg:${{ github.sha }}" > .env.image
 
