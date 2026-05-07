@@ -39,6 +39,3 @@ jobs:
       
       - name: Push Docker image
         run: docker push $IMAGE:$GITHUB_SHA
-      
-  Push-image-to-Artifact-Registry:
-    runs-on: ubuntu-latest
