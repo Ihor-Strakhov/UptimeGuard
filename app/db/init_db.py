@@ -22,5 +22,8 @@ with base_engine.connect() as conn:
     else:
         logger.info(f"Database {settings.db_name} already exists")
 
+from app.db import models
+
+logger.info(f"Tables to be created: {list(Base.metadata.tables.keys())}")
 Base.metadata.create_all(bind=engine)
 logger.info("DB initialized")

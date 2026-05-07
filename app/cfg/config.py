@@ -15,6 +15,7 @@ class Settings(BaseSettings):
         return (
             f"postgresql://{self.db_user}:{self.db_password}"
             f"@{self.db_host}:{self.db_port}/{self.db_name}"
+            f"?sslmode=require"
         )
 
     @property
@@ -22,6 +23,7 @@ class Settings(BaseSettings):
         return (
             f"postgresql://{self.db_user}:{self.db_password}"
             f"@{self.db_host}:{self.db_port}/postgres"
+            f"?sslmode=require"
         )
 
 
