@@ -35,7 +35,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t uptimeguard:$GITHUB_SHA .
+        run: docker build -t $IMAGE:$GITHUB_SHA .
       
       - name: Push Docker image
         run: docker push $IMAGE:$GITHUB_SHA
