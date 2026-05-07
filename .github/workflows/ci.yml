@@ -69,30 +69,31 @@ jobs:
   Deploy:
     runs-on: ubuntu-latest
     needs: Docker
-    steps:
-      - name: Add VM to known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.VM_IP }} >> ~/.ssh/known_hosts
+      steps:
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
 
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVAT_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
+        echo "${{ secrets.SSH_PRIV_KEY }}" > ~/.ssh/id_ed25519
+        chmod 600 ~/.ssh/id_ed25519
 
-      - name: Deploy via SSH
-        run: |
-          ssh -i ~/.ssh/id_ed25519 ${{ secrets.VM_USER }}@${{ secrets.VM_IP }} << EOF
+        ssh-keyscan -H ${{ secrets.VM_IP }} >> ~/.ssh/known_hosts
 
-          set -e
+    - name: Deploy to VM
+      run: |
+        ssh -i ~/.ssh/id_ed25519 ${{ secrets.VM_USER }}@${{ secrets.VM_IP }} << 'EOF'
 
-          cd /home/xrems/UptimeGuard
+        set -e
 
-          echo "IMAGE=europe-central2-docker.pkg.dev/uptimeguard-495411/uptime-guard-repo/uptimeimg:${{ github.sha }}" > .env
+        cd /home/xrems/UptimeGuard
 
-          docker compose --env-file .env pull
+        echo "IMAGE=europe-central2-docker.pkg.dev/uptimeguard-495411/uptime-guard-repo/uptimeimg:${{ github.sha }}" > .env.deploy
 
-          docker compose --env-file .env up -d
+        docker compose --env-file .env.deploy pull
+        docker compose --env-file .env.deploy up -d --remove-orphans
 
-          EOF
+        docker image prune -f
+
+        echo "Deployment successful: ${{ github.sha }}"
+
+        EOF
