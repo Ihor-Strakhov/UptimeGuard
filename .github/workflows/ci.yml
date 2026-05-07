@@ -83,19 +83,16 @@ jobs:
 
       - name: Deploy via SSH
         run: |
-          run: |
-          ssh -i ~/.ssh/id_ed25519 \
-          -o StrictHostKeyChecking=yes \
-          ${{ secrets.VM_USER }}@${{ secrets.VM_IP }} << 'EOF'
+          ssh -i ~/.ssh/id_ed25519 ${{ secrets.VM_USER }}@${{ secrets.VM_IP }} << EOF
 
           set -e
 
-          IMAGE="europe-central2-docker.pkg.dev/uptimeguard-495411/uptime-guard-repo/uptimeimg:${{ github.sha }}"
+          cd /opt/uptimeguard
 
-          docker pull $IMAGE
-          docker stop uptimeguard || true
-          docker rm uptimeguard || true
+          echo "IMAGE=europe-central2-docker.pkg.dev/uptimeguard-495411/uptime-guard-repo/uptimeimg:${{ github.sha }}" > .env.image
 
-          docker run -d --name uptimeguard -p 80:8000 $IMAGE
+          docker compose --env-file .env.image pull
+
+          docker compose --env-file .env.image up -d
 
           EOF
