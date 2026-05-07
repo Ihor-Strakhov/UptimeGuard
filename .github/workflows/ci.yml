@@ -89,8 +89,8 @@ jobs:
 
         echo "IMAGE=europe-central2-docker.pkg.dev/uptimeguard-495411/uptime-guard-repo/uptimeimg:${{ github.sha }}" > .env.deploy
 
-        docker compose --env-file .env.deploy pull
-        docker compose --env-file .env.deploy up -d --remove-orphans
+        docker compose --env-file .env pull
+        docker compose --env-file .env up -d --remove-orphans
 
         docker image prune -f
 
