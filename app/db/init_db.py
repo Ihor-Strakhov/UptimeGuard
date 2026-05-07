@@ -1,6 +1,4 @@
 from sqlalchemy import create_engine, text
-
-# from sqlalchemy.exc import ProgrammingError
 from app.db.database import Base, engine
 from app.cfg.config import settings
 from pathlib import Path
@@ -21,8 +19,6 @@ with base_engine.connect() as conn:
         logger.info(f"Database {settings.db_name} created")
     else:
         logger.info(f"Database {settings.db_name} already exists")
-
-from app.db import models
 
 logger.info(f"Tables to be created: {list(Base.metadata.tables.keys())}")
 Base.metadata.create_all(bind=engine)
