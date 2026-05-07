@@ -89,10 +89,10 @@ jobs:
 
           cd /home/xrems/UptimeGuard
 
-          echo "IMAGE=europe-central2-docker.pkg.dev/uptimeguard-495411/uptime-guard-repo/uptimeimg:${{ github.sha }}" > .env.image
+          echo "IMAGE=europe-central2-docker.pkg.dev/uptimeguard-495411/uptime-guard-repo/uptimeimg:${{ github.sha }}" > .env
 
-          docker compose --env-file .env.image pull
+          docker compose --env-file .env pull
 
-          docker compose --env-file .env.image up -d
+          docker compose --env-file .env up -d
 
           EOF
