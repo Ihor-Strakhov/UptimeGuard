@@ -90,6 +90,9 @@ jobs:
           ssh-keyscan -H ${{ secrets.VM_IP }} >> ~/.ssh/known_hosts
 
           cat ~/.ssh/known_hosts
+          whoami
+          pwd
+          
 
       - name: Deploy to VM
         run: |
