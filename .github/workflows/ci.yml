@@ -90,14 +90,14 @@ jobs:
           ssh-keyscan -H ${{ secrets.VM_IP }} >> ~/.ssh/known_hosts
 
           cat ~/.ssh/known_hosts
-          whoami
-          pwd
-          ls -la /home
-          ls -la /home/xrems
 
       - name: Deploy to VM
         run: |
           ssh -i ~/.ssh/id_ed25519 ${{ secrets.VM_USER }}@${{ secrets.VM_IP }}
+          whoami
+          pwd
+          ls -la /home
+          ls -la /home/xrems
           set -e
           cd /home/xrems/UptimeGuard
 
