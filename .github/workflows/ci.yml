@@ -93,9 +93,10 @@ jobs:
 
       - name: Deploy to VM
         run: |
-          ssh -i ~/.ssh/id_ed25519 ${{ secrets.VM_USER }}@${{ secrets.VM_IP }}
+          ssh -i ~/.ssh/id_ed25519 ${{ secrets.VM_USER }}@${{ secrets.VM_IP }} "
+          hostname
           ls -la /home
           export IMAGE=europe-central2-docker.pkg.dev/uptimeguard-495411/uptime-guard-repo/uptimeimg:${{ github.sha }}
           cd /home/xrems/UptimeGuard
           source deploy.sh
-          docker image prune -f
+          docker image prune -f "
