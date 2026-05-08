@@ -92,7 +92,8 @@ jobs:
           cat ~/.ssh/known_hosts
           whoami
           pwd
-          
+          ls -la /home
+          ls -la /home/xrems
 
       - name: Deploy to VM
         run: |
