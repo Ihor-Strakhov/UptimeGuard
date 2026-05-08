@@ -99,7 +99,7 @@ jobs:
 
           cd /home/xrems/UptimeGuard
 
-          IMAGE="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }}"
+          IMAGE="$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE_NAME"
 
           sed -i "/^IMAGE=/d" .env
           echo "IMAGE=$IMAGE" >> .env
