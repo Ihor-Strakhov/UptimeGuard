@@ -93,22 +93,13 @@ jobs:
 
       - name: Deploy to VM
         run: |
-          ssh -i ~/.ssh/id_ed25519 ${{ secrets.VM_USER }}@${{ secrets.VM_IP }} << EOF
-
+          ssh -i ~/.ssh/id_ed25519 ${{ secrets.VM_USER }}@${{ secrets.VM_IP }}
           set -e
-
           cd /home/xrems/UptimeGuard
 
-          IMAGE="$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE_NAME"
-
-          sed -i "/^IMAGE=/d" .env
-          echo "IMAGE=$IMAGE" >> .env
+          export IMAGE=europe-central2-docker.pkg.dev/uptimeguard-495411/uptime-guard-repo/uptimeimg:${{ github.sha }}
 
           docker compose --env-file .env pull
           docker compose --env-file .env up -d --remove-orphans
 
           docker image prune -f
-
-          echo "Deploy success"
-
-          EOF
