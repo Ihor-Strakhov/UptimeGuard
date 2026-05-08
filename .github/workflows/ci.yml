@@ -71,36 +71,44 @@ jobs:
     needs: Docker
 
     steps:
-    - name: Setup SSH
-      run: |
-        mkdir -p ~/.ssh
+      - name: Setup SSH
+        run: |
+          set -x
 
-        cat << 'EOF' > ~/.ssh/id_ed25519
-        ${{ secrets.SSH_PRIVAT_KEY }}
-        EOF
+          mkdir -p ~/.ssh
 
-        chmod 600 ~/.ssh/id_ed25519
+          cat << 'EOF' > ~/.ssh/id_ed25519
+          ${{ secrets.SSH_PRIVAT_KEY }}
+          EOF
 
-        ssh-keyscan -H ${{ secrets.VM_IP }} >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/id_ed25519
 
-    - name: Deploy to VM
-      run: |
-        ssh -i ~/.ssh/id_ed25519 ${{ secrets.VM_USER }}@${{ secrets.VM_IP }} << EOF
+          ls -la ~/.ssh
 
-        set -e
+          ssh-keyscan -H ${{ secrets.VM_IP }}
 
-        cd /home/xrems/UptimeGuard
+          ssh-keyscan -H ${{ secrets.VM_IP }} >> ~/.ssh/known_hosts
 
-        IMAGE="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }}"
+          cat ~/.ssh/known_hosts
 
-        sed -i "/^IMAGE=/d" .env
-        echo "IMAGE=$IMAGE" >> .env
+      - name: Deploy to VM
+        run: |
+          ssh -i ~/.ssh/id_ed25519 ${{ secrets.VM_USER }}@${{ secrets.VM_IP }} << EOF
 
-        docker compose --env-file .env pull
-        docker compose --env-file .env up -d --remove-orphans
+          set -e
 
-        docker image prune -f
+          cd /home/xrems/UptimeGuard
 
-        echo "Deploy success"
+          IMAGE="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }}"
 
-        EOF
+          sed -i "/^IMAGE=/d" .env
+          echo "IMAGE=$IMAGE" >> .env
+
+          docker compose --env-file .env pull
+          docker compose --env-file .env up -d --remove-orphans
+
+          docker image prune -f
+
+          echo "Deploy success"
+
+          EOF
