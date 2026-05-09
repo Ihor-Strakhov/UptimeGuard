@@ -53,12 +53,12 @@ jobs:
 
       - name: Build Docker image
         run: |
-          IMAGE="$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE_NAME"
+          IMAGE="$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE"
           docker build -t $IMAGE:${{ github.sha }} .
       
       - name: Push Docker image
         run: |
-          IMAGE="$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE_NAME"
+          IMAGE="$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE"
           docker push $IMAGE:${{ github.sha }}
 
   Deploy:
