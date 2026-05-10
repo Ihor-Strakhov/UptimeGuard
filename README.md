@@ -2,6 +2,9 @@
 
 UptimeGuard is a lightweight uptime monitoring service built with FastAPI and PostgreSQL. It exposes a simple web UI and REST API for adding URLs to monitor, while a background worker periodically checks each site and stores results in the database.
 
+## Deployment
+- The application is deployed and accessible at: https://uptimeguard.org
+
 ## Features
 
 - Add websites to monitor via web UI or REST API
