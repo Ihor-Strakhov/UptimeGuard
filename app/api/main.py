@@ -23,7 +23,7 @@ class Site(BaseModel):
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # для разработки
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -51,7 +51,7 @@ async def add_site_to_db(site: Site, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_site)
 
-    logger.info(f"Site '{site.url}' created successfully!")
+    logger.debug(f"Site '{site.url}' created successfully!")
 
     return {"message": f"Site '{site.url}' created successfully!"}
 

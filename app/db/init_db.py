@@ -16,10 +16,10 @@ with base_engine.connect() as conn:
 
     if not exists:
         conn.execute(text(f"CREATE DATABASE {settings.db_name}"))
-        logger.info(f"Database {settings.db_name} created")
+        logger.debug(f"Database {settings.db_name} created")
     else:
-        logger.info(f"Database {settings.db_name} already exists")
+        logger.debug(f"Database {settings.db_name} already exists")
 
-logger.info(f"Tables to be created: {list(Base.metadata.tables.keys())}")
+logger.debug(f"Tables to be created: {list(Base.metadata.tables.keys())}")
 Base.metadata.create_all(bind=engine)
-logger.info("DB initialized")
+logger.debug("DB initialized")

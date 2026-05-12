@@ -5,8 +5,15 @@ from app.db.database import SessionLocal
 from app.db.models import Site, CheckResult
 from pathlib import Path
 from app.cfg.logging_config import get_logger
+from enum import Enum
 
 logger = get_logger(Path(__file__).stem)
+
+
+class SiteStatus(Enum):
+    UP = "UP"
+    DOWN = "DOWN"
+    ERROR = "ERROR"
 
 
 def wait_for_db_ready():
@@ -16,10 +23,10 @@ def wait_for_db_ready():
     while True:
         try:
             db = SessionLocal()
-            logger.info("DB + tables are ready")
+            logger.debug("DB + tables are ready")
             break
         except Exception:
-            logger.info("Waiting for DB schema...")
+            logger.debug("Waiting for DB schema...")
             time.sleep(2)
         finally:
             if db:
@@ -41,13 +48,13 @@ def check_site(url):
         )
 
         if response.status_code < 500:
-            return "UP", response.status_code
+            return SiteStatus.UP, response.status_code
 
-        return "DOWN", response.status_code
+        return SiteStatus.DOWN, response.status_code
 
     except requests.RequestException as exc:
         logger.exception(f"[CHECKER] request error for {normalized_url}: {exc}")
-        return "DOWN", None
+        return SiteStatus.ERROR, None
 
 
 def site_is_due_for_check(site, db):
@@ -72,11 +79,11 @@ def run_checker():
         db = SessionLocal()
         try:
             sites = db.query(Site).all()
-            logger.info(f"[CHECKER] sites: {len(sites)}")
+            logger.debug(f"[CHECKER] sites: {len(sites)}")
 
             for site in sites:
                 if not site_is_due_for_check(site, db):
-                    logger.info(f"[CHECKER] skip {site.url}, interval not passed")
+                    logger.debug(f"[CHECKER] skip {site.url}, interval not passed")
                     continue
 
                 status, status_code = check_site(site.url)
@@ -88,7 +95,7 @@ def run_checker():
                 db.add(result)
                 db.commit()
                 db.refresh(result)
-                logger.info(
+                logger.debug(
                     f"[CHECKER] {site.url} -> {status} "
                     f"({status_code if status_code is not None else 'no code'})"
                 )
